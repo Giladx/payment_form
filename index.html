@@ -14,7 +14,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     <title>Credit Card Payment Form- דף תשלום טוסי</title>
     <meta name="description" content="דף תשלום של האופטיקה הכי מגניבה בארץ">
-    <link rel="shortcut icon" href="img/favicon.ico" type="icon/png" sizes="32x32" />
     <script type="text/javascript" src="https://yaadpay.co.il/yaadpay/ajax/ajax.js"></script>
     <script type="text/javascript" src="https://yaadpay.co.il/yaadpay/ajax/functionAddEvent.js"></script>
     <script type="text/javascript" src="https://yaadpay.co.il/yaadpay/ajax/contact15.js"></script>
@@ -579,6 +578,25 @@
             border: 1px solid #040;
             box-shadow: 5px 5px 20px 0px #aaa;
         }
+
+        .errs {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .server_err_msg {
+            background: #e40525;
+            color: #ffffff;
+            text-align: center;
+            padding: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .pwm-container {
+            text-align: center;
+            padding: 10px 25px;
+        }
     </style>
     <!-- inline CSS End-->
 </head>
@@ -711,6 +729,11 @@
                 <div id="paypal" class="price-label">YP-applepay-SC</div>
             </div>
         </div>
+        <div class="server_err_msg heebo">הודעת שגיאה מהשרת</div>
+
+        <div class="pwm-container heebo">
+            YP-pwm-SC
+        </div>
         <!-- Total End -->
         <!-- Inputs -->
         <div class="form-container">
@@ -796,6 +819,12 @@
         </div>
         <!-- Apple & Google Pay Buttons End -->
 
+        <div class="errs heebo rtl-container">
+            <div class="err_msg" id="ID_Error">יש להזין מספר ת.ז. תקין</div>
+            <div class="err_msg" id="CC_Error">יש להזין מספר כרטיס אשראי תקין</div>
+            <div class="err_msg" id="CVV_Error">יש להזין מספר CVV תקין</div>
+        </div>
+
         <!-- SUBMIT -->
         <input type="submit" name="btnSubmit" id="btnSubmit" value="לתשלום" class="submit_btn heebo">
         <div class="heebo rtl-container" id="paypal">YP-paypal-SC</div>
@@ -860,10 +889,20 @@
     ====================-->
 
 
-    <!-- JQUERY  -->
+    <!-- JQUERY -->
     <script src="./yaad.js" type="text/javascript"></script>
     <!-- JQUERY END -->
-
+    <!-- page script https://yaadpay.b-cdn.net -->
+    <script src="https://yaadpay.co.il/yaadpay/tmp/yaadpage/script/siteJS.js"></script>
+    <script>
+        var ERR = "YP-errormsg-SC";
+        if (ERR) {
+            //ShowPop("תשובת חברת האשראי",ERR,"נסה שנית");
+            $j(".server_err_msg").html("תשובת חברת האשראי: " + ERR + ". נסה שנית").css({
+                "display": "block"
+            });
+        }
+    </script>
     <!-- Form Inputs JS Start -->
     <script>
         window.onload = function () {
@@ -875,7 +914,7 @@
             const output = document.getElementById('output');
             const ccicon = document.getElementById('ccicon');
             const ccsingle = document.getElementById('ccsingle');
-            /*         const generatecard = document.getElementById('generatecard');*/
+            /**         const generatecard = document.getElementById('generatecard');*/
 
 
             let cctype = null;
