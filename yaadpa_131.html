@@ -1,0 +1,548 @@
+<html>
+
+<head>
+    <meta charset="windows-1255">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YP-title-SC</title>
+    <meta name="author" content="Yasmin Zak">
+    <link rel="icon" href="/favicon.ico">
+    <script type="text/javascript" src="https://yaadpay.co.il/yaadpay/ajax/ajax.js"></script>
+    <script type="text/javascript" src="https://yaadpay.co.il/yaadpay/ajax/functionAddEvent.js"></script>
+    <script type="text/javascript" src="https://yaadpay.co.il/yaadpay/ajax/contact15.js"></script>
+    <script type="text/javascript" src="https://yaadpay.co.il/yaadpay/ajax/xmlHttp.js"></script>
+    <script type="text/javascript" src="https://yaadpay.co.il/yaadpay/jquery.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Heebo" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css"
+        integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+    <link href="https://yaadpay.co.il/yaadpay/tmp/yaadpage/css/styleNew.css" rel="stylesheet" type="text/css" />
+    <link href="https://yaadpay.co.il/yaadpay/tmp/yaadpage/css/style_rtl.css" rel="stylesheet" type="text/css" />
+
+
+    <script type="text/javascript">
+        function disable(f) {
+            showLoading();
+            var button = document.getElementById('btnSubmit');
+            button.value = "מתחבר לחברת האשראי";
+            button.disabled = true;
+            return true;
+        }
+
+        function showLoading() {
+            document.getElementById('loadingmsg').style.display = 'block';
+        }
+
+        function updatePayments() {
+            var tash = document.getElementsByName("Tash")[0].value;
+            var price = document.getElementsByName("Amount")[0].value;
+            if (price == "") {
+                document.getElementsByName("Tash")[0].disabled = true;
+                setElementVisibility("payments-container2", "hide");
+            } else {
+                document.getElementsByName("Tash")[0].disabled = false;
+                var coin = price[price.length - 1];
+                var amount;
+                if (coin >= '0' && coin <= '9') {
+                    coin = '';
+                    amount = price;
+                } else {
+                    amount = price.substring(0, price.length - 1);
+                }
+                if (Number(amount) == Number(amount).toFixed(0)) {
+                    amount = Number(amount).toFixed(0);
+                }
+                if (tash == 1) {
+                    document.getElementById('frstPay').value = coin + amount;
+                    document.getElementById('fixPay').value = coin + 0;
+                    setElementVisibility("payments-container2", "hide");
+                } else {
+                    var i = amount.split(".");
+                    var frst = amount / tash;
+                    var payments = Math.floor(frst);
+                    var amount2 = amount - payments * (tash - 1);
+                    if (i.length > 1) {
+                        var j = i[1].length;
+                        if (i[1][j - 1] == " ") j--;
+                        amount2 = amount2.toFixed(j);
+                    }
+                    document.getElementById('frstPay').value = coin + amount2;
+                    document.getElementById('fixPay').value = coin + payments;
+                    setElementVisibility("payments-container2", "show");
+                }
+            }
+        }
+
+        function appendError(error, div) {
+            if (div == "credit-card-container") {
+                document.getElementById('creditError').innerHTML = error;
+            }
+        }
+    </script>
+    <style>
+        .submit_btn {
+            background: #0d410d;
+        }
+
+        .input-text {
+            padding: 15px;
+            padding-right: 0px;
+            height: 50px;
+            border: none;
+            outline: none;
+            font-size: 18px;
+            border: 1px solid #b9b9b9;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        label i {
+            display: block;
+            position: absolute;
+            top: 100%;
+            margin-top: 15px;
+            font-size: 20px;
+            color: rgba(0, 0, 0, .45);
+            padding-left: 5px;
+            border-left: 1px solid #e9e9e9;
+            right: 10px;
+        }
+
+        .server_err_msg {
+            border-radius: 6px;
+        }
+
+        .form_hndlDiv.short input,
+        .form_hndlDiv.short select {
+            width: 80px;
+        }
+
+        .hsc,
+        #paypal {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .dtls_cont {
+            border-color: #ffffff;
+            border: 1px solid #ffffff;
+            background: #ffffff;
+        }
+
+        .textbox_3 {
+            font-size: 1.5rem;
+        }
+
+        .form_hndlDiv {
+            padding: 0px 0%;
+            margin: 0 auto;
+            position: relative;
+        }
+        .form_hndlDiv.short.cvv_cont{
+            padding: 0 !important;
+        }
+        #payments-container{
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!--
+	<header>
+		<div class="header_inner siteW">
+			<img src="YP-bizlogo-SC" class="cstmr_logo" alt="logo" title="cstmr" />
+			<p class="cstmr_name">
+				YP-bizname-SC
+			</p>
+		</div>
+	</header>
+	-->
+    <!--<h1 class="mainTTL siteW">פרטי התרומה</h1>-->
+
+
+
+    <form name="Form" method="post" id="CC_Form" action="YP-formurl-SC" class="Yform siteW">
+
+        <div class="dtls_cont">
+            <!--
+			<div class="dtls_cell">
+                
+				<span class="dtls_ttl">פרטי התרומה:</span> 
+				<span class="dtls_dscrptn">YP-info-SC</span>
+                YP-Linfo-SC
+			</div>
+            
+        <div class="dtls_cell price_cell" id="existsPrice">
+            <label for="totalPrice" class="dtls_ttl">סכום לתשלום:</label> 
+                <input type="text" name="Amount" id="totalPrice" class="dtls_price" value="YP-amount-SC" disabled></input>
+        </div>-->
+            <div class="dtls_cell price_cell form_hndlDiv">
+                <!--<label for="totalPrice" class="dtls_ttl">סכום לתרומה:</label>-->
+                <div class="textbox_3" id="Price">
+                    YP-amount-SC
+                </div>
+            </div>
+
+        </div>
+
+        <div class="server_err_msg">הודעת שגיאה מהשרת</div>
+
+        <!--
+		<div class="part_container">
+			<fieldset class="main_fieldset">
+			<legend>פרטי התורם</legend>
+			
+			<div class="dbl_cont">
+				<div class="form_hndlDiv">
+					<label for="UserName">שם פרטי<i class="fas fa-user"></i></label>
+					<input type="text" id="UserName" name="ClientName" value="YP-LV_ClientName-SC" class="input-text required" placeholder='שם פרטי' /> 
+				</div>
+				 
+				<div class="form_hndlDiv">
+					<label for="LastName">שם משפחה<i class="fas fa-user-friends"></i></label>
+					<input type="text" id="LastName" name="ClientLName" value="YP-LV_ClientLName-SC" class="input-text required" placeholder='שם משפחה' /> 
+				</div>
+			</div>
+			
+			<div class="form_hndlDiv ">
+				<label for="UserPhon">מספר טלפון נייד<i class="fas fa-phone"></i></label>
+				<input type="tel" id="UserPhon" name="cell" value="YP-LV_Fild3-SC" class="input-text" placeholder="מספר טלפון" />
+			</div>
+				
+			<div class="form_hndlDiv">
+				<label for="UserEmail">דוא"ל<i class="fas fa-at"></i></label>
+				<input type="email" id="UserEmail" name="email" value="YP-LV_Fild2-SC" class="input-text required" placeholder='דוא"ל' /> 
+			</div>
+			
+			<hr>
+				
+			<div class="form_hndlDiv">
+				<label for="UserAdress">כתובת<i class="fas fa-envelope"></i></label>
+				<input type="text" id="UserAdress" name="street" value="YP-LV_street-SC" class="input-text" placeholder="כתובת" /> 
+			</div>
+			
+			
+			<div class="form_hndlDiv short half userCT_cont">
+				<label for="UserCT">עיר<i class="fas fa-map-marker-alt"></i></label>
+				<input type="text" id="UserCT" name="city" value="YP-LV_city-SC" class="input-text" placeholder="עיר" />
+			</div>
+		
+			<div class="form_hndlDiv short cvv_cont">
+				<label for="UserZip">מיקוד<i class="fas fa-map-pin"></i></label>
+				<input type="tel" id="UserZip" name="zip" value="YP-LV_zip-SC" class="input-text" />
+			</div>
+		
+		</fieldset>
+		</div>
+		-->
+        <div class="part_container">
+            <fieldset class="main_fieldset credit_fieldset">
+                <!--<legend>פרטי כ. אשראי</legend>-->
+
+                <div class="form_hndlDiv " id="credit-card-container">
+                    <label for="CC">מספר כרטיס<i class="fas fa-credit-card"></i></label>
+                    <input type="tel" id="credit-card-input" name="CC" value="" class="input-text required"
+                        autocomplete="off" placeholder="מספר כ. אשראי" />
+                    <span id="creditError" style="color:red; text-align: center"></span>
+                </div>
+
+
+                <!--<div class="form_hndlDiv" id="userId-container">
+				<label for="UserId">תעודת זהות<i class="fas fa-address-card"></i></label>
+				<input type="tel" id="userId-input" name="UserId" value="YP-LV_UserId-SC" class="input-text required" />
+			</div>-->
+
+                <div class="form_hndlDiv tokefHndl">
+                    <label for="Tmonth">תוקף</label>
+                    <div class="form_hndlDiv short select_cont">
+                        <select NAME="Tmonth" id="expmonth" class="input-text sml required">
+                            <option value="0">חודש</option>
+                            <option value="1">01</option>
+                            <option value="2">02</option>
+                            <option value="3">03</option>
+                            <option value="4">04</option>
+                            <option value="5">05</option>
+                            <option value="6">06</option>
+                            <option value="7">07</option>
+                            <option value="8">08</option>
+                            <option value="9">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                    </div>
+                    <div class="form_hndlDiv short select_cont">
+                        <label for="expyear"></label>
+                        <select NAME="Tyear" id="expyear" class="input-text required">
+                            YP-year-SC
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form_hndlDiv short cvv_cont">
+                    <label for="cvv">cvv<i class="fas fa-lock"></i></label>
+                    <input type="tel" id="cvv" name="cvv" value="" class="input-text required" />
+
+                    <div class="help">
+                        <span class="help_trigger">?</span>
+                        <div class="help_content">
+                            <img src="https://yaadpay.co.il/yaadpay/tmp/yaadpage/images/card_CVV.png" alt="cvv img"
+                                class="cvv_img" />
+                        </div>
+                    </div>
+                </div>
+
+                <div id="payments-container">
+                    <div class="form_hndlDiv tokefHndl">
+                        <label for="payNum">YP-tasht-SC</label>
+                        <div class="form_hndlDiv short select_cont">
+                            YP-tashf-SC
+                            <!--<select name="payNum" id="payNum" class="input-text sml" onchange="updatePayments()">
+                            
+                        </select>-->
+                        </div>
+                    </div>
+
+                    <!--<div class="form_hndlDiv short pays_cont" id="payments-container2">
+                    <div class="form_hndlDiv short select_cont">
+                        <label for="frstPay">סכום תשלום ראשון:</label>
+                        <input type="text" id="frstPay" name="frstPay" value="" class="input-text" disabled />
+                    </div>
+                    
+                    <div class="form_hndlDiv short select_cont">
+                        <label for="fixPay">סכום תשלום קבוע:</label>
+                        <input type="text" id="fixPay" name="fixPay" value="" class="input-text" disabled />
+                    </div>
+                </div>-->
+                </div>
+
+            </fieldset>
+
+            <div class="errs">
+                <div class="err_msg" id="ID_Error">יש להזין מספר ת.ז. תקין</div>
+                <div class="err_msg" id="CC_Error">יש להזין מספר כרטיס אשראי תקין</div>
+                <div class="err_msg" id="CVV_Error">יש להזין מספר CVV תקין</div>
+            </div>
+
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="לתשלום" class="submit_btn">
+            <div id="paypal">YP-applepay-SC</div>
+            <div id="paypal">YP-paypal-SC</div>
+            <div class="hsc">YP-hidden-SC</div>
+
+            <div id="tableicons" class="crdtcrd_cont">
+                <img src="https://yaadpay.co.il/yaadpay/tmp/yaadpage/images/isracart.png" />
+                <img src="https://yaadpay.co.il/yaadpay/tmp/yaadpage/images/leumicard.png" />
+                <img src="https://yaadpay.co.il/yaadpay/tmp/yaadpage/images/mastercard.png" />
+                <img src="https://yaadpay.co.il/yaadpay/tmp/yaadpage/images/viza.png" />
+                <div>
+                    תשלום מאובטח בכרטיס אשראי
+                </div>
+            </div>
+        </div>
+
+
+    </form>
+
+    <!--<footer class="footer siteW">
+		<img src="https://yaadpay.co.il/yaadpay/tmp/yaadpage/images/yaad_logo_mob.png" class="Yaad_logo" alt="logo" title="Yaad" />
+		<span>Powered By:</span> <a href="https://yaadpay.yaad.net" target="_blank">Yaad Sarig Payments</a>&nbsp;&nbsp;|&nbsp;
+		<img src="https://yaadpay.b-cdn.net/yaadpay/tmp/iframenew/pci.png" />
+		
+		<div id="DigiCertClickID_-NlXBFI9" data-language="en_US">
+			<script type="text/javascript">
+				var __dcid = __dcid || [];__dcid.push(["DigiCertClickID_-NlXBFI9", "10", "m", "black", "-NlXBFI9"]);(function(){var cid=document.createElement("script");cid.async=true;cid.src="//seal.digicert.com/seals/cascade/seal.min.js";var s = document.getElementsByTagName("script");var ls = s[(s.length - 1)];ls.parentNode.insertBefore(cid, ls.nextSibling);}());
+			</script> 
+		</div>
+	</footer>-->
+
+
+    <!--===================================================================================
+====================================================================================-->
+
+
+    <div id="loadingmsg">
+        מתחבר לחברת האשראי, אנא המתן...<br />
+        <i class="fas fa-spinner"></i>
+    </div>
+
+    <div class="poperr_cont">
+        <div class="poperr_cube">
+            <div class="poperr-close">
+                <svg width="42" height="42" class="close_poperr">
+                    <circle cx="21" cy="21" r="21" fill="transparent"></circle>
+                    <g transform="rotate(45 21 21)">
+                        <rect x="8" y="20.25" width="26" height="1.5" fill="black"></rect>
+                        <rect x="20.25" y="8" height="26" width="1.5" fill="black"></rect>
+                    </g>
+                </svg>
+            </div>
+
+            <h6 class="poperr_header"></h6>
+            <p class="poperr_msg"></p>
+            <div class="btn_cont">
+                <button class="btn close_poperr poperr_btn"></button>
+            </div>
+
+        </div>
+    </div>
+
+    <!--==================== js ====================-->
+
+    <!-- get jquery -->
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+    <script>
+        window.onload = function () {
+            var flag = 0;
+            var table = document.getElementsByTagName('table')[0];
+            if (typeof table !== "undefined" && !table.tHead) {
+                $('table').remove();
+            }
+            var credit = document.getElementById("credit-card-input");
+            credit.addEventListener('blur',
+                function () {
+                    getJ2Data();
+                },
+                false
+            );
+
+            //====================== copy
+
+            var userIdCheck = $('#UserId').val();
+            if (userIdCheck != undefined) {
+
+                var pageLang = document.getElementsByName("PageLang")[0].value;
+                var removeVal = true;
+                switch (pageLang) {
+                    case "_eng":
+                        removeVal = false;
+                        break;
+                    default:
+                        removeVal = true;
+                }
+
+                if (userIdCheck.indexOf('L') == 0) {
+                    if (removeVal == false) {
+                        setElementVisibility("userId-container", "hide");
+                    } else {
+                        document.getElementById("userId-input").value = "";
+                        setElementVisibility("userId-container", "show");
+                    }
+
+                } else if (userIdCheck == "000000000") {
+                    setElementVisibility("userId-container", "hide");
+                }
+                //====================== copy-end
+
+            }
+            credit.style.backgroundRepeat = "no-repeat";
+            var tash = document.getElementsByName("Tash")[0];
+            var price = document.getElementById("Price");
+            if (price.children.length == 1) {
+                //$('#existsPrice').remove();
+                price.className = "";
+                price.setAttribute("style", "text-align:center");
+                var amount = document.getElementsByName("Amount")[0];
+                if (tash && tash.type == "select-one") {
+                    amount.addEventListener('blur', function () {
+                            updatePayments();
+                        },
+                        false
+                    );
+                }
+                amount.id = "totalPrice";
+                amount.style.width = "70%";
+                amount.className = amount.className + " required";
+                flag = 1;
+            } //else {
+            //$('#dontexistsPrice').remove();
+            //$('#totalPrice').css('width','75%');
+            //$('#totalPrice').css('font-size', 'inherit');
+            //}
+
+            if (tash && tash.type == "select-one") {
+                tash.className = "input-text sml";
+                tash.disabled = true;
+                tash.addEventListener('change',
+                    function () {
+                        updatePayments();
+                    },
+                    false
+                );
+                updatePayments();
+            } else {
+                setElementVisibility("payments-container2", "hide");
+            }
+
+        }
+        var ajax = new sack();
+        var currentClientID = false;
+        var currentCC = false;
+
+        var localUserId_bypass
+
+        function showClientData() {
+            localUserId_bypass = document.getElementById('userId-input').value;
+            eval(ajax.response);
+            if ($('#userId-container').is(':visible')) {
+                if (localUserId_bypass == "000000000") {
+                    document.getElementById('userId-input').value = ""
+                } else {
+                    document.getElementById('userId-input').value = localUserId_bypass
+                }
+            }
+        }
+
+        function getJ2Data() {
+            var clientCC = document.getElementById('credit-card-input').value;
+            document.getElementById('creditError').innerHTML = "";
+            //alert(clientCC);
+            if (clientCC != currentCC) {
+                document.getElementById('credit-card-input').style.backgroundImage =
+                    "URL('https://yaadpay.co.il/yaadpay/tmp/yaadfull/img/j2/LOADER-2.gif')";
+                currentCC = clientCC
+                ajax.requestFile = 'YP-formurl-SC?Masof=YP-Lmasof-SC&action=J2Leumi&CC=' + clientCC + '&text=';
+                ajax.method = 'GET';
+                ajax.onCompletion = showClientData;
+                ajax.runAJAX();
+            }
+
+        }
+
+        function setElementVisibility(elemID, visibility) {
+            if (elemID == "userId-container" && visibility == "hide") {
+                $('#userId-input').removeClass('requierd');
+            } else if (document.getElementById('userId-input').className.indexOf('requierd') == -1) {
+                $('#userId-input').addClass('requierd');
+            }
+            switch (visibility) {
+                case "hide":
+                    $("#" + elemID).hide();
+                    break;
+
+                case "show":
+                    $("#" + elemID).show();
+            }
+        }
+    </script>
+
+
+
+
+
+    <!-- page script https://yaadpay.b-cdn.net -->
+    <script src="https://yaadpay.co.il/yaadpay/tmp/yaadpage/script/siteJS.js"></script>
+    <script>
+        var ERR = "YP-errormsg-SC";
+        if (ERR) {
+            //ShowPop("תשובת חברת האשראי",ERR,"נסה שנית");
+            $j(".server_err_msg").html("תשובת חברת האשראי: " + ERR + ". נסה שנית").css({
+                "display": "block"
+            });
+        }
+    </script>
+    <!--==================== /js ====================-->
+</body>
+
+</html>
